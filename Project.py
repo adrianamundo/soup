@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from bs4 import BeautifulSoup, CData
-import requests,sys,csv,json
+import requests,sys,csv,json,urllib,os, urllib.request
 
 #lista de url's a usar
 url1="http://ufm.edu/Portal"
 url2 = "http://ufm.edu/Estudios"
-#url3
-#url4
+url3 = "https://fce.ufm.edu/carrera/cs/"
+#url4 = "https://www.ufm.edu/Directorio"
 
 print ("<Adriana Mundo>")
 
@@ -151,14 +151,68 @@ for datos in tablas3.findAll('a'):
 print("-------------------------------------------------------------------------------------------------------")
 
 #count all &lt;a> (just display the count)
-print("count all &lt;a:")
 d=0
 for datos in soup.find_all('a'):
         d += 1
-        print("-",d)
+print("count all &lt;a: <",d,">")
 print("-------------------------------------------------------------------------------------------------------")
 print("=======================================================================================================")
 print("3.CS")
+try:
+    html_content = requests.get(url3).text
+except:
+    print(f"unable to get {url3}")
+    sys.exit(1)
+
+soup = BeautifulSoup(html_content, "html.parser")
+
+#GET title
+titulo = soup.title.string
+print("GET title <",titulo,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#GET and display the href
+for datos in soup.find_all("meta", {"property":"og:url"}):
+    hrefaddress = datos.get("content")
+print("GET and display the href <", hrefaddress,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#Download the "FACULTAD de CIENCIAS ECONOMICAS" logo. (you need to obtain the link dynamically)
+print("Download the FACULTAD DE CIENCIAS ECONÓMICAS logo.:")
+logo = soup.find("div",{"class":"fl-photo-content fl-photo-img-png"})
+for datos in logo.findAll('img'):
+    logophoto = datos.get('src')
+    urllib.request.urlretrieve(logophoto, os.path.basename(logophoto))
+    print("<",logophoto,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#GET following &lt;meta>: "title", "description" ("og")
+print("GET the following &lt;meta>:")
+for datos in soup.find_all("meta", {"property":"og:title"}):
+    tituloog = datos.get("content")
+    print("- title <",tituloog,">")
+
+for datos in soup.find_all("meta", {"property":"og:description"}):
+    descriptionog = datos.get("content")
+    print("- description <",descriptionog,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#count all &lt;a> (just display the count)
+e = 0
+for datos in soup.find_all('a'):
+    e += 1
+print("count all &lt;a: <",e,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#count all &lt;div> (just display the count)
+f = 0
+for datos in soup.find_all('div'):
+    f += 1
+print("count all &lt;div: <",f,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+print("=======================================================================================================")
+print("4.Directorio")
 
 #for div in soup.find_all("div"):
  #   print(div)
