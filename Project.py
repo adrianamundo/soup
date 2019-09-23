@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, CData
 import requests,sys,csv,json
 
 #lista de url's a usar
@@ -62,11 +62,46 @@ for datos in table.findAll("tr"):
 print("-------------------------------------------------------------------------------------------------------")
 
 #find all properties that have href (link to somewhere)
-#falta hacer
+print("find all properties that have href (link to somewhere):")
+for datos in soup.find_all('a', limit =3):
+    links = datos.get('href')
+    print("- <",links,">")
+print("-------------------------------------------------------------------------------------------------------")
 
+#GET href of "UFMail" button
+for datos in soup.find_all("a",{"id":"ufmail_"}):
+    button = datos.get('href')
+    #print(button)
+    print("GET href of UFMail button <",button,">")
+print("-------------------------------------------------------------------------------------------------------")
 
+#GET href "MiU" button
+for datos in soup.find_all("a",{"id":"miu_"}):
+    button2 = datos.get('href')
+    #print(button2)
+    print("GET href MiU button <",button2,">")
+print("-------------------------------------------------------------------------------------------------------")
 
-#for datos in soup.find_all("table",{"id":"menu-table"}):
+#get hrefs of all &lt;img>
+print("get hrefs of all &lt;img>:")
+for datos in soup.find_all('a'):
+    if datos.img:
+        print("<",datos.img['src'],">")
+
+print("-------------------------------------------------------------------------------------------------------")
+
+#count all &lt;a>
+print("count all &lt;a:")
+a=0
+for datos in soup.find_all('a'):
+    #if datos.img:
+        a += 1
+        print("-",a)
+print("-------------------------------------------------------------------------------------------------------")
+
+print("=======================================================================================================")
+print("2.Estudios")
+
 
 
 #for div in soup.find_all("div"):
