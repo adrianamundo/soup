@@ -144,7 +144,21 @@ print("-------------------------------------------------------------------------
 
 #get and display all available social media with its links (href) "class=social pull-right"
 print("Get and display all available social media with its links (href) class =social pull -right:")
+tablas3 = soup.find("div",{"class":"social pull-right"})
+for datos in tablas3.findAll('a'):
+        celdas3 = datos.get('href')
+        print("-<",celdas3,">")
+print("-------------------------------------------------------------------------------------------------------")
 
+#count all &lt;a> (just display the count)
+print("count all &lt;a:")
+d=0
+for datos in soup.find_all('a'):
+        d += 1
+        print("-",d)
+print("-------------------------------------------------------------------------------------------------------")
+print("=======================================================================================================")
+print("3.CS")
 
 #for div in soup.find_all("div"):
  #   print(div)
