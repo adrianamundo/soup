@@ -260,7 +260,7 @@ email_list= list(dict.fromkeys(sorted(tabladirectorio_text)))
 filename= "Miniproyecto/soup/logs/4directorio_emails.json"
 with open(filename, "w+") as writer:
     for datos in email_list:
-        json.dump(datos, writer)
+        #json.dump(datos, writer)
         writer.write('-'+datos+'\n')
 print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
 print("-------------------------------------------------------------------------------------------------------")
