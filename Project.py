@@ -12,7 +12,7 @@ url4 = "https://www.ufm.edu/Directorio"
 print ("<Adriana Mundo>")
 
 class Minisoup:
-    def portal(self):
+    def portal():
         print("===================================================")
 # Make a GET request to fetch the raw HTML content
 try:
@@ -64,15 +64,18 @@ print("-------------------------------------------------------------------------
 
 #find all properties that have href (link to somewhere)
 print("find all properties that have href (link to somewhere):")
-#if len(soup.find_all('a')) < 31:
-for datos in soup.find_all('a'):
-    links = datos.get('href')
-    print("- <",links,">")
-#else:
-   # filename = "logs/href.txt"
- #   with open(filename,"w+") as f:
-  #      for datos in soup.find_all('a'):
-#            json.dump(datos,f)
+links = soup.find_all("a", href=True)
+if len(soup.find_all('a', href = True)) < 31:
+    for datos in soup.find_all('a'):
+        links = datos.get('href')
+        print("- <",links,">")
+else: 
+    fileName="href's.txt"
+    file = open(fileName,"a")
+    file.write(f"All hrefs: {links}")
+    file.close
+    #print(os.path.abspath(fileName))
+print("Output exceeds 30 lines, sending it to: <",fileName,">")
 print("-------------------------------------------------------------------------------------------------------")
 
 #GET href of "UFMail" button
@@ -114,7 +117,7 @@ print("-------------------------------------------------------------------------
 
 
 print("=======================================================================================================")
-def estudios(self):
+def estudios(Minisoup):
     print("2.Estudios")
 
 #now navigate to  /Estudios (better if you obtain href from the DOM)
@@ -172,7 +175,9 @@ for datos in soup.find_all('a'):
 print("count all &lt;a: <",d,">")
 print("-------------------------------------------------------------------------------------------------------")
 print("=======================================================================================================")
-print("3.CS")
+
+def cs(Minisoup):
+    print("3.CS")
 try:
     html_content = requests.get(url3).text
 except:
@@ -227,7 +232,8 @@ print("count all &lt;div: <",f,">")
 print("-------------------------------------------------------------------------------------------------------")
 
 print("=======================================================================================================")
-print("4.Directorio")
+def directorio():
+    print("4.Directorio")
 try:
     html_content = requests.get(url4).text
 except:
@@ -325,6 +331,20 @@ facultad_lista= list(dict.fromkeys(sorted(facultad)))
 #GET the directory of all 3 column table and generate a CSV with these columns (Entity,FullName, Email), and dump it to `logs/4directorio_3column_tables.csv`
 
 
+try:
+    if sys.argv[1] == '1':
+        portal()
+    if sys.argv[1] == '2':
+        estudios(Minisoup)
+    if sys.argv[1] == '3':
+        cs(Minisoup)
+    if sys.argv[1] == '4':
+        directorio()
+except IndexError:
+    portal()
+    estudios(Minisoup)
+    carrera(Minisoup)
+    directorio()
 
             
 
