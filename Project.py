@@ -9,10 +9,11 @@ url2 = "http://ufm.edu/Estudios"
 url3 = "https://fce.ufm.edu/carrera/cs/"
 url4 = "https://www.ufm.edu/Directorio"
 
+
+
 print ("<Adriana Mundo>")
 
-class Minisoup:
-    def portal():
+def portal():
         print("===================================================")
 # Make a GET request to fetch the raw HTML content
 try:
@@ -109,7 +110,7 @@ for datos in soup.find_all('a'):
         print("-",a)
 print("-------------------------------------------------------------------------------------------------------")
 
-
+#EXTRA:
 
 
             
@@ -117,8 +118,9 @@ print("-------------------------------------------------------------------------
 
 
 print("=======================================================================================================")
-def estudios(Minisoup):
-    print("2.Estudios")
+
+def estudios():
+    print("===================================================")
 
 #now navigate to  /Estudios (better if you obtain href from the DOM)
 try:
@@ -128,7 +130,7 @@ except:
     sys.exit(1)
 
 soup = BeautifulSoup(html_content, "html.parser")
-
+print("2.Estudios")
 #display all items from "topmenu" (8 in total)
 print("Display all items from topmenu:")
 b = 0
@@ -176,8 +178,9 @@ print("count all &lt;a: <",d,">")
 print("-------------------------------------------------------------------------------------------------------")
 print("=======================================================================================================")
 
-def cs(Minisoup):
-    print("3.CS")
+def cs():
+    print("===================================================")
+    
 try:
     html_content = requests.get(url3).text
 except:
@@ -186,6 +189,7 @@ except:
 
 soup = BeautifulSoup(html_content, "html.parser")
 
+print("3.CS")
 #GET title
 titulo = soup.title.string
 print("GET title <",titulo,">")
@@ -233,7 +237,8 @@ print("-------------------------------------------------------------------------
 
 print("=======================================================================================================")
 def directorio():
-    print("4.Directorio")
+    print("===================================================")
+    
 try:
     html_content = requests.get(url4).text
 except:
@@ -242,6 +247,7 @@ except:
 
 soup = BeautifulSoup(html_content, "html.parser")
 
+print("4.Directorio")
 #Sort all emails alphabetically (`href="mailto:arquitectura@ufm.edu"`) in a list, dump it to logs/4directorio_emails.txt
 tabladirectorio = soup.find_all("a",{"href":re.compile('@ufm.edu')})
 tabladirectorio_text = []
@@ -252,11 +258,11 @@ for datos in tabladirectorio:
 email_list= list(dict.fromkeys(sorted(tabladirectorio_text)))
 
 filename= "Miniproyecto/soup/logs/4directorio_emails.json"
-#with open(filename, "w+") as writer:
- #   for datos in email_list:
-        #json.dump(datos, writer)
-  #      writer.write('-'+datos+'\n')
-#print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
+with open(filename, "w+") as writer:
+    for datos in email_list:
+        json.dump(datos, writer)
+        writer.write('-'+datos+'\n')
+print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
 print("-------------------------------------------------------------------------------------------------------")
 
 #Count all emails that start with a vowel. (just display the count)
@@ -329,26 +335,6 @@ facultad_lista= list(dict.fromkeys(sorted(facultad)))
   #      writer3.write('-'+datos+'\n')
 
 #GET the directory of all 3 column table and generate a CSV with these columns (Entity,FullName, Email), and dump it to `logs/4directorio_3column_tables.csv`
-
-
-try:
-    if sys.argv[1] == '1':
-        portal()
-    if sys.argv[1] == '2':
-        estudios(Minisoup)
-    if sys.argv[1] == '3':
-        cs(Minisoup)
-    if sys.argv[1] == '4':
-        directorio()
-except IndexError:
-    portal()
-    estudios(Minisoup)
-    carrera(Minisoup)
-    directorio()
-
-            
-
-
 
 
 
