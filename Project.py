@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 from bs4 import BeautifulSoup, CData
-import requests,sys,csv,json,urllib,os, urllib.request
+import requests,sys,csv,json,os, urllib.request, re
+import json
 
 #lista de url's a usar
 url1="http://ufm.edu/Portal"
 url2 = "http://ufm.edu/Estudios"
 url3 = "https://fce.ufm.edu/carrera/cs/"
-#url4 = "https://www.ufm.edu/Directorio"
+url4 = "https://www.ufm.edu/Directorio"
 
 print ("<Adriana Mundo>")
 
@@ -63,9 +64,15 @@ print("-------------------------------------------------------------------------
 
 #find all properties that have href (link to somewhere)
 print("find all properties that have href (link to somewhere):")
-for datos in soup.find_all('a', limit =3):
+#if len(soup.find_all('a')) < 31:
+for datos in soup.find_all('a'):
     links = datos.get('href')
     print("- <",links,">")
+#else:
+   # filename = "logs/href.txt"
+ #   with open(filename,"w+") as f:
+  #      for datos in soup.find_all('a'):
+#            json.dump(datos,f)
 print("-------------------------------------------------------------------------------------------------------")
 
 #GET href of "UFMail" button
@@ -99,8 +106,16 @@ for datos in soup.find_all('a'):
         print("-",a)
 print("-------------------------------------------------------------------------------------------------------")
 
+
+
+
+            
+
+
+
 print("=======================================================================================================")
-print("2.Estudios")
+def estudios(self):
+    print("2.Estudios")
 
 #now navigate to  /Estudios (better if you obtain href from the DOM)
 try:
@@ -213,6 +228,111 @@ print("-------------------------------------------------------------------------
 
 print("=======================================================================================================")
 print("4.Directorio")
+try:
+    html_content = requests.get(url4).text
+except:
+    print(f"unable to get {url4}")
+    sys.exit(1)
+
+soup = BeautifulSoup(html_content, "html.parser")
+
+#Sort all emails alphabetically (`href="mailto:arquitectura@ufm.edu"`) in a list, dump it to logs/4directorio_emails.txt
+tabladirectorio = soup.find_all("a",{"href":re.compile('@ufm.edu')})
+tabladirectorio_text = []
+for datos in tabladirectorio:
+    #emails = datos.get('href')
+    tabladirectorio_text.append(datos.text)
+
+email_list= list(dict.fromkeys(sorted(tabladirectorio_text)))
+
+filename= "Miniproyecto/soup/logs/4directorio_emails.json"
+with open(filename, "w+") as writer:
+    for datos in email_list:
+        #json.dump(datos, writer)
+        writer.write('-'+datos+'\n')
+print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
+print("-------------------------------------------------------------------------------------------------------")
+
+#Count all emails that start with a vowel. (just display the count)
+vocal = 0
+for datos in email_list:
+    if datos[0] in ["a", "e", "i", "o","u"]:
+        vocal +=1
+print("Count all emails that start with a vowel <",vocal,">")
+print("-------------------------------------------------------------------------------------------------------")
+
+#Group in a JSON all rows that have `Same Address` (dont use Room number) as address, dump it to logs/4directorio_address.json
+tabladireccion = soup.find("table",{"class":"tabla ancho100"})
+tabladireccion2 = soup.find_all("table",{"class":"tabla ancho100"})[1]
+
+direccion = {}
+oficinas = []
+pagina = []
+ambos1 = []
+
+for datos in tabladireccion2.findAll("tr"):
+        daton = datos.find_all("td")
+
+        for datos in daton:
+             if len(daton) == 4:
+                 oficinas =[]
+                 pagina = []
+                 a = daton[4].get_text().strip().split(',')[0]
+                 b=daton[1].get_text.strip()
+                 oficinas.append(a)
+                 pagina.append(b)
+                 ambos1.append(oficinas,pagina)
+
+ambos = dict(zip(oficinas,pagina))
+
+#for datos in tabladireccion2.findAll("tr"):
+ #   daton2 = datos.find_all("td")
+  #  if len(daton2) == 4:
+   #     c = daton2[4].get_text().strip.split(',')[0]
+     #   d=daton2[0].get_text().strip()
+    #    oficinas.append(d)
+      #  pagina.append(c)
+#ambos = oficinas + pagina
+#ambos = dict(zip(oficinas, pagina))
+
+
+with open("Miniproyecto/soup/logs/4directorio_address.json","w+") as writer2:
+    #for datos in direccion:
+    json.dump(direccion, writer2)
+         #writer2.write(json_string)
+         #writer2.close()
+print("-------------------------------------------------------------------------------------------------------")
+
+#Try to correlate in a JSON Faculty Dean and Directors, and dump it to `logs/4directorio_deans.json`
+tabladean = soup.find_all("table",{"class":"tabla ancho100 col3"})[1]
+facultad = []
+for datos in tabladean.findAll("td"):
+    i = 0
+    datosdean = datos.text
+    facultad1 = ' '
+    nombre = ' '
+    correo = ' '
+
+   
+    facultad.append(datos.text)
+
+facultad_lista= list(dict.fromkeys(sorted(facultad)))
+
+with open("Miniproyecto/soup/logs/4directorio_deans.json","w+") as writer3:
+    for datos in facultad_lista:
+        writer3.write('-'+datos+'\n')
+
+#GET the directory of all 3 column table and generate a CSV with these columns (Entity,FullName, Email), and dump it to `logs/4directorio_3column_tables.csv`
+
+
+
+            
+
+
+
+
+
+
 
 #for div in soup.find_all("div"):
  #   print(div)
