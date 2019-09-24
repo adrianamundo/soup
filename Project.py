@@ -246,11 +246,11 @@ for datos in tabladirectorio:
 email_list= list(dict.fromkeys(sorted(tabladirectorio_text)))
 
 filename= "Miniproyecto/soup/logs/4directorio_emails.json"
-with open(filename, "w+") as writer:
-    for datos in email_list:
+#with open(filename, "w+") as writer:
+ #   for datos in email_list:
         #json.dump(datos, writer)
-        writer.write('-'+datos+'\n')
-print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
+  #      writer.write('-'+datos+'\n')
+#print("Sort all emails alphabetically in a list and dump it to /logs/4directorio_emails.txt:",filename)
 print("-------------------------------------------------------------------------------------------------------")
 
 #Count all emails that start with a vowel. (just display the count)
@@ -296,9 +296,9 @@ ambos = dict(zip(oficinas,pagina))
 #ambos = dict(zip(oficinas, pagina))
 
 
-with open("Miniproyecto/soup/logs/4directorio_address.json","w+") as writer2:
+#with open("Miniproyecto/soup/logs/4directorio_address.json","w+") as writer2:
     #for datos in direccion:
-    json.dump(direccion, writer2)
+ #   json.dump(direccion, writer2)
          #writer2.write(json_string)
          #writer2.close()
 print("-------------------------------------------------------------------------------------------------------")
@@ -318,9 +318,9 @@ for datos in tabladean.findAll("td"):
 
 facultad_lista= list(dict.fromkeys(sorted(facultad)))
 
-with open("Miniproyecto/soup/logs/4directorio_deans.json","w+") as writer3:
-    for datos in facultad_lista:
-        writer3.write('-'+datos+'\n')
+#with open("Miniproyecto/soup/logs/4directorio_deans.json","w+") as writer3:
+ #   for datos in facultad_lista:
+  #      writer3.write('-'+datos+'\n')
 
 #GET the directory of all 3 column table and generate a CSV with these columns (Entity,FullName, Email), and dump it to `logs/4directorio_3column_tables.csv`
 
